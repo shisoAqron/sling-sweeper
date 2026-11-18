@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#1b1f27" />
+    <title>スリングスイーパー | Sling Sweeper</title>
+    <meta name="description" content="石を弾いて止まったマスを開く、マインスイーパー × おはじきのブラウザゲーム。" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🪨%3C/text%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="app">
+      <header id="hud">
+        <div class="stat"><span class="stat-label">投数</span><b id="stat-shots">0</b></div>
+        <div class="stat"><span class="stat-label">ミス</span><b id="stat-misses">0</b></div>
+        <div class="stat"><span class="stat-label">残り</span><b id="stat-remaining">0</b></div>
+        <div id="mode-label" class="mode-label"></div>
+        <div class="hud-actions">
+          <button id="btn-restart" type="button">やり直し</button>
+          <button id="btn-menu" type="button">メニュー</button>
+        </div>
+      </header>
+
+      <main id="stage">
+        <canvas id="board" aria-label="スリングスイーパーの盤面"></canvas>
+      </main>
+
+      <section id="dev-panel" hidden>
+        <strong>開発用</strong>
+        <label>
+          発射倍率
+          <input id="dev-multiplier" type="range" min="2" max="6" step="0.05" />
+          <output id="dev-multiplier-out"></output>
+        </label>
+        <button id="dev-reset" type="button">元の倍率に戻す</button>
+        <div id="dev-info"></div>
+      </section>
+
+      <div id="menu" class="overlay">
+        <div class="panel">
+          <h1>🪨 スリングスイーパー</h1>
+          <p class="lead">石を弾いて、<b>中心が止まったマス</b>を開こう。爆弾に当たってもゲームは続く。</p>
+
+          <fieldset>
+            <legend>モード</legend>
+            <label><input type="radio" name="mode" value="normal" checked /> 通常（毎回ランダム）</label>
+            <label><input type="radio" name="mode" value="daily" /> 日替わり（全員同じ盤面）</label>
+          </fieldset>
+
+          <label class="field">
+            難易度
+            <select id="difficulty"></select>
+          </label>
+
+          <div id="menu-info" class="info"></div>
+
+          <button id="btn-start" class="primary" type="button">スタート</button>
+
+          <details class="howto">
+            <summary>遊び方</summary>
+            <ul>
+              <li>盤面のどこでもドラッグして、弓を引くように引っ張る。離すと<b>逆向き</b>に石が飛ぶ。</li>
+              <li>引っ張りが長いほど遠くへ。倍率はゲームごとに決まり、同じ入力なら同じ場所に止まる。</li>
+              <li>通過したマスは開かない。石の中心が止まったマスだけが開く。</li>
+              <li>薄く表示される前回の方向・着地点を目安に、次の射出を補正しよう。</li>
+              <li>すべての安全マスを開いたらクリア。少ない投数・ミスを目指そう。</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+
+      <div id="result" class="overlay" hidden>
+        <div class="panel">
+          <h2>クリア！</h2>
+          <dl class="result-grid">
+            <dt>投数</dt><dd id="res-shots"></dd>
+            <dt>ミス数</dt><dd id="res-misses"></dd>
+            <dt>モード</dt><dd id="res-mode"></dd>
+            <dt id="res-id-label">日付</dt><dd id="res-id"></dd>
+          </dl>
+          <div id="res-records" class="info"></div>
+          <pre id="res-share" class="share-text"></pre>
+          <div class="result-actions">
+            <a id="btn-tweet" class="button primary" target="_blank" rel="noopener noreferrer">Xで共有</a>
+            <button id="btn-copy" type="button">結果をコピー</button>
+          </div>
+          <div class="result-actions">
+            <button id="btn-retry" type="button">もう一度</button>
+            <button id="btn-result-menu" type="button">メニューへ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
